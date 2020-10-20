@@ -1,6 +1,13 @@
+# Following a tutorial on https://pythonprogramming.net/pygame-python-3-part-1-intro/
+# Sticking to a 4-color CGA color palette for kicks
+
 import pygame
+import os
 
 pygame.init()
+
+# Let us use assets from current directory
+__location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
 display_width = 800
 display_height = 600
@@ -13,7 +20,7 @@ white = (255,255,255)
 
 clock = pygame.time.Clock()
 crashed = False
-car_image = pygame.image.load("/Users/justingray/Pictures/Racer.png")
+car_image = pygame.image.load(os.path.join(__location__, "playercar.png"))
 
 def car(x,y):
     game_display.blit(car_image, (x,y))
