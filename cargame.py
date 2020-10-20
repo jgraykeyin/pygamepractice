@@ -3,6 +3,7 @@
 
 import pygame
 import os
+import time
 
 pygame.init()
 
@@ -17,6 +18,9 @@ grey = (85,85,85)
 white = (255,255,255)
 magenta = (255,85,255)
 cyan = (85,255,255)
+yellow = (255,255,85)
+green = (85,255,85)
+blue = (85,85,255)
 
 car_width = 190
 
@@ -29,6 +33,23 @@ car_image = pygame.image.load(os.path.join(__location__, "playercar.png"))
 def car(x,y):
     game_display.blit(car_image, (x,y))
 
+def text_objects(text,font):
+    text_surface = font.render(text, True, yellow)
+    return text_surface, text_surface.get_rect()
+
+def message_display(text):
+    large_text = pygame.font.Font(os.path.join(__location__,'PressStart2P-Regular.ttf'),32)
+    TextSurf, TextRect = text_objects(text,large_text)
+    TextRect.center = ((display_width / 2), (display_height /2))
+    game_display.blit(TextSurf,TextRect)
+    pygame.display.update()
+    time.sleep(2)
+    game_loop()
+
+def crash():
+    message_display("GAME OVER")
+    
+
 def game_loop():
     x = (display_width * 0.38)
     y = (display_height * 0.7)
@@ -39,7 +60,9 @@ def game_loop():
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                crashed = True
+                #game_exit = True
+                pygame.quit()
+                quit()
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LEFT:
@@ -56,7 +79,7 @@ def game_loop():
         car(x,y)
 
         if x > display_width - car_width or x < 0:
-            game_exit = True
+            crash()
 
         pygame.display.update()
         clock.tick(60)
