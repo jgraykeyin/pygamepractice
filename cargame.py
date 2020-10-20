@@ -1,5 +1,5 @@
 # Following a tutorial on https://pythonprogramming.net/pygame-python-3-part-1-intro/
-# Sticking to a 4-color CGA color palette for kicks
+# Using a 16-color CGA palette for kicks!
 
 import pygame
 import os
@@ -13,6 +13,7 @@ display_width = 800
 display_height = 600
 
 black = (0,0,0)
+grey = (85,85,85)
 white = (255,255,255)
 magenta = (255,85,255)
 cyan = (85,255,255)
@@ -51,7 +52,7 @@ def game_loop():
                     x_change = 0
         x+=x_change
         
-        game_display.fill(white)
+        game_display.fill(grey)
         car(x,y)
 
         if x > display_width - car_width or x < 0:
