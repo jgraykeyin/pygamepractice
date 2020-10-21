@@ -4,6 +4,7 @@
 import pygame
 import os
 import time
+import random
 
 pygame.init()
 
@@ -29,6 +30,10 @@ pygame.display.set_caption('Racing Game')
 clock = pygame.time.Clock()
 #crashed = False
 car_image = pygame.image.load(os.path.join(__location__, "playercar.png"))
+cpu_image = pygame.image.load(os.path.join(__location__, "cpucar.png"))
+
+def things(thingx,thingy,thingw,thingh,color):
+    pygame.draw.rect(game_display,color, [thingx,thingy,thingw,thingh])
 
 def car(x,y):
     game_display.blit(car_image, (x,y))
@@ -54,6 +59,13 @@ def game_loop():
     x = (display_width * 0.38)
     y = (display_height * 0.7)
     x_change = 0
+
+    thing_startx = random.randrange(0,display_width)
+    thing_starty = -600
+    thing_speed = 7
+    thing_width = 100
+    thing_height = 100
+
     game_exit = False
 
     while not game_exit:
@@ -73,13 +85,20 @@ def game_loop():
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
                     x_change = 0
-        x+=x_change
         
+        x+=x_change
         game_display.fill(grey)
+
+        things(thing_startx, thing_starty, thing_width, thing_height, green)
+        thing_starty += thing_speed
         car(x,y)
 
         if x > display_width - car_width or x < 0:
             crash()
+
+        if thing_starty > display_height:
+            thing_starty = 0 - thing_height
+            thing_startx = random.randrange(0,display_width)
 
         pygame.display.update()
         clock.tick(60)
