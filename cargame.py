@@ -28,12 +28,16 @@ car_width = 190
 game_display = pygame.display.set_mode((display_width,display_height))
 pygame.display.set_caption('Racing Game')
 clock = pygame.time.Clock()
-#crashed = False
+
 car_image = pygame.image.load(os.path.join(__location__, "playercar.png"))
 cpu_image = pygame.image.load(os.path.join(__location__, "cpucar.png"))
 
-def things(thingx,thingy,thingw,thingh,color):
-    pygame.draw.rect(game_display,color, [thingx,thingy,thingw,thingh])
+def road_lines(linex, liney, linew, lineh, color):
+    pygame.draw.rect(game_display,color,[linex,liney,linew,lineh])
+
+def things(thingx,thingy):
+    #pygame.draw.rect(game_display,color, [thingx,thingy,thingw,thingh])
+    game_display.blit(cpu_image, (thingx,thingy))
 
 def car(x,y):
     game_display.blit(car_image, (x,y))
@@ -63,8 +67,14 @@ def game_loop():
     thing_startx = random.randrange(0,display_width)
     thing_starty = -600
     thing_speed = 7
-    thing_width = 100
-    thing_height = 100
+
+    road_line_startx = (display_width / 2)
+    road_line_starty = -100
+    road_line_speed = 12
+    road_line_width = 10
+    road_line_height = 100
+    #thing_width = 100
+    #thing_height = 100
 
     game_exit = False
 
@@ -89,16 +99,23 @@ def game_loop():
         x+=x_change
         game_display.fill(grey)
 
-        things(thing_startx, thing_starty, thing_width, thing_height, green)
+        things(thing_startx, thing_starty)
         thing_starty += thing_speed
+
+        road_lines(road_line_startx, road_line_starty, road_line_width, road_line_height, yellow)
+        road_line_starty += road_line_speed
         car(x,y)
 
         if x > display_width - car_width or x < 0:
             crash()
 
         if thing_starty > display_height:
-            thing_starty = 0 - thing_height
+            thing_starty = 0 - 150
             thing_startx = random.randrange(0,display_width)
+
+        if road_line_starty > display_height:
+            road_line_starty = 0 - 100
+            road_line_startx = (display_width / 2)
 
         pygame.display.update()
         clock.tick(60)
