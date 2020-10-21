@@ -25,6 +25,7 @@ magenta = (255,85,255)
 cyan = (85,255,255)
 yellow = (255,255,85)
 green = (85,255,85)
+dark_green = (0,170,0)
 blue = (85,85,255)
 
 car_width = 190
@@ -35,6 +36,9 @@ clock = pygame.time.Clock()
 
 car_image = pygame.image.load(os.path.join(__location__, "playercar.png"))
 cpu_image = pygame.image.load(os.path.join(__location__, "cpucar.png"))
+
+def road_side(x,y,w,h,color):
+    pygame.draw.rect(game_display,color,[x,y,w,h])
 
 def road_lines(linex, liney, linew, lineh, color):
     pygame.draw.rect(game_display,color,[linex,liney,linew,lineh])
@@ -103,15 +107,23 @@ def game_loop():
         x+=x_change
         game_display.fill(grey)
 
-        things(thing_startx, thing_starty)
-        thing_starty += thing_speed
-
         road_lines(road_line_startx, road_line_starty, road_line_width, road_line_height, yellow)
         road_line_starty += road_line_speed
+
+        # Draw the CPU cars
+        things(thing_startx, thing_starty)
+        thing_starty += thing_speed
+        
+        # Draw the player car
         car(x,y)
 
-        if x > display_width - car_width or x < 0:
-            crash()
+        road_side(0,0,100,display_height,dark_green)
+        road_side(700,0,100,display_height,dark_green)
+
+        if x < 100:
+            x = 100
+        elif x > 580:
+            x = 580
 
         if thing_starty > display_height:
             thing_starty = 0 - 150
