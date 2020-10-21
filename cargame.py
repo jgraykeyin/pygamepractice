@@ -1,5 +1,6 @@
 # Following a tutorial on https://pythonprogramming.net/pygame-python-3-part-1-intro/
 # Using a 16-color CGA palette for kicks!
+# Music from https://newretrowave.bandcamp.com/album/the-80s-dream-compilation-tape
 
 import pygame
 import os
@@ -7,9 +8,12 @@ import time
 import random
 
 pygame.init()
+pygame.mixer.init()
 
 # Let us use assets from current directory
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
+pygame.mixer.music.load(os.path.join(__location__, "bgmusic1.mp3"))
+pygame.mixer.music.play(-1,0.0)
 
 display_width = 800
 display_height = 600
