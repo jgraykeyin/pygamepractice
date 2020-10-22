@@ -28,14 +28,17 @@ green = (85,255,85)
 dark_green = (0,170,0)
 blue = (85,85,255)
 
-car_width = 190
+car_width = 87
+cpu_car_height = 140
+cpu_car_width = 88
 
 game_display = pygame.display.set_mode((display_width,display_height))
-pygame.display.set_caption('Racing Game')
+pygame.display.set_caption('Retro Racer')
 clock = pygame.time.Clock()
 
 car_image = pygame.image.load(os.path.join(__location__, "playercar.png"))
 cpu_image = pygame.image.load(os.path.join(__location__, "cpucar.png"))
+grass_image = pygame.image.load(os.path.join(__location__, "grass.png"))
 
 def road_side(x,y,w,h,color):
     pygame.draw.rect(game_display,color,[x,y,w,h])
@@ -43,9 +46,12 @@ def road_side(x,y,w,h,color):
 def road_lines(linex, liney, linew, lineh, color):
     pygame.draw.rect(game_display,color,[linex,liney,linew,lineh])
 
-def things(thingx,thingy):
+def grass(x,y):
+    game_display.blit(grass_image, (x,y))
+
+def cpu_car(x,y):
     #pygame.draw.rect(game_display,color, [thingx,thingy,thingw,thingh])
-    game_display.blit(cpu_image, (thingx,thingy))
+    game_display.blit(cpu_image, (x,y))
 
 def car(x,y):
     game_display.blit(car_image, (x,y))
@@ -72,17 +78,19 @@ def game_loop():
     y = (display_height * 0.7)
     x_change = 0
 
-    thing_startx = random.randrange(0,display_width)
-    thing_starty = -600
-    thing_speed = 7
+    cpu_car_startx = random.randrange(0,display_width)
+    cpu_car_starty = -600
+    cpu_car_speed = 7
 
     road_line_startx = (display_width / 2)
     road_line_starty = -100
     road_line_speed = 12
     road_line_width = 10
     road_line_height = 100
-    #thing_width = 100
-    #thing_height = 100
+
+    #grass_startx = 0
+    #grass_starty = -96
+    #grass_speed = 9
 
     game_exit = False
 
@@ -107,31 +115,43 @@ def game_loop():
         x+=x_change
         game_display.fill(grey)
 
+        road_side(0,0,100,display_height,dark_green)
+        road_side(700,0,100,display_height,dark_green)
+
         road_lines(road_line_startx, road_line_starty, road_line_width, road_line_height, yellow)
         road_line_starty += road_line_speed
+        
+        # Draw the grass
+        #grass_starty += grass_speed
+        #grass(grass_startx,grass_starty)
+        #grass(grass_startx+700,grass_starty)
 
         # Draw the CPU cars
-        things(thing_startx, thing_starty)
-        thing_starty += thing_speed
+        cpu_car(cpu_car_startx, cpu_car_starty)
+        cpu_car_starty += cpu_car_speed
         
         # Draw the player car
         car(x,y)
-
-        road_side(0,0,100,display_height,dark_green)
-        road_side(700,0,100,display_height,dark_green)
 
         if x < 100:
             x = 100
         elif x > 580:
             x = 580
 
-        if thing_starty > display_height:
-            thing_starty = 0 - 150
-            thing_startx = random.randrange(0,display_width)
+        if cpu_car_starty > display_height:
+            cpu_car_starty = 0 - 150
+            cpu_car_startx = random.randrange(0,display_width)
 
         if road_line_starty > display_height:
             road_line_starty = 0 - 100
             road_line_startx = (display_width / 2)
+
+        if y < cpu_car_starty + cpu_car_height:
+            #print('y crossover')
+
+            if x > cpu_car_startx and x < cpu_car_startx + cpu_car_width or x+car_width > cpu_car_startx and x + car_width < cpu_car_startx+cpu_car_width:
+                #print('x crossover')
+                crash()
 
         pygame.display.update()
         clock.tick(60)
